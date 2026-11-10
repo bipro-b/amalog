@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Prep Log</title>
+<title>Amazon SDE · 180 Days</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
   --shadow:0 1px 0 rgba(20,38,31,.06);
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
   color-scheme:light dark;
 }
 @media (prefers-color-scheme: dark){
@@ -39,15 +38,12 @@
   --shadow:none;
 }
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
-body{
-  margin:0;background:var(--bg);color:var(--ink);
-  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums;
-  padding-bottom:88px;
-}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums;padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 h1,h2,h3{font-family:"Fraunces","Iowan Old Style",Georgia,serif;font-weight:600;margin:0;letter-spacing:-.01em}
 button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:4px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 
@@ -55,65 +51,67 @@ button,input,select,textarea{font:inherit;color:inherit}
 .view{display:none;padding-top:18px}
 .view.on{display:block}
 
-/* ---- hero ---- */
-.hero{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px 14px;box-shadow:var(--shadow)}
-.hero-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.wk{font-family:"Fraunces",Georgia,serif;font-size:56px;line-height:.85;font-weight:700;letter-spacing:-.03em}
+/* hero */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.wk{font-family:"Fraunces",Georgia,serif;font-size:52px;line-height:.9;font-weight:700;letter-spacing:-.03em}
 .wk small{font-size:16px;font-weight:400;color:var(--muted);letter-spacing:0}
-.phase{color:var(--muted);font-size:14px;margin-top:8px}
+.sub{color:var(--muted);font-size:13.5px;margin-top:6px}
+.phase{color:var(--muted);font-size:14px;margin-top:10px}
 .phase b{color:var(--ink);font-weight:600}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--line)}
-.badge.deload{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.badge.rev{background:var(--warn-soft);color:var(--warn);border-color:transparent}
 .badge.streak{background:var(--brass-soft);color:var(--brass);border-color:transparent}
+.badge.ok{background:var(--done-soft);color:var(--done);border-color:transparent}
+.daynav{display:flex;gap:6px;flex:none}
+.nb{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--raise);cursor:pointer;display:grid;place-items:center;font-size:17px}
+.nb.txt{width:auto;padding:0 11px;font-size:13px;font-weight:600}
+.nb:disabled{opacity:.35;cursor:default}
+.pbar{height:7px;background:var(--line);border-radius:99px;margin-top:14px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--done);border-radius:99px;transition:width .25s}
+.done-banner{margin-top:12px;background:var(--done);color:var(--surface);border-radius:11px;padding:11px 14px;font-weight:600;font-size:14px}
 
-/* ---- campaign strip ---- */
-.strip{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;margin-top:16px}
-.cell{aspect-ratio:1;border-radius:3px;background:var(--line);position:relative}
-.cell[data-fill="1"]{background:color-mix(in srgb,var(--done) 35%,var(--line))}
-.cell[data-fill="2"]{background:color-mix(in srgb,var(--done) 65%,var(--line))}
-.cell[data-fill="3"]{background:var(--done)}
-.cell.deload{box-shadow:inset 0 0 0 1.5px var(--brass);background:transparent}
-.cell.now{box-shadow:inset 0 0 0 2px var(--ink)}
-.strip-key{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--muted)}
-
-/* ---- sections ---- */
-.sec{margin-top:26px}
+/* sections */
+.sec{margin-top:24px}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}
 .sec-head h2{font-size:21px}
 .sec-head span{font-size:13px;color:var(--muted)}
 
-/* ---- checklist ---- */
-.slot{font-size:13px;color:var(--muted);margin:16px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+/* tasks */
+.slot{font-size:13px;color:var(--muted);margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
 .task{display:flex;gap:11px;align-items:flex-start;padding:11px 12px;background:var(--surface);border:1px solid var(--line);border-radius:11px;margin-bottom:7px;cursor:pointer;box-shadow:var(--shadow)}
 .task:active{background:var(--raise)}
 .task.done{background:var(--done-soft);border-color:transparent}
 .task.done .t-name{text-decoration:line-through;color:var(--muted)}
+.task.special{border-color:var(--brass)}
 .box{flex:none;width:21px;height:21px;border-radius:6px;border:1.5px solid var(--muted);display:grid;place-items:center;margin-top:1px}
 .task.done .box{background:var(--done);border-color:var(--done)}
 .box svg{width:13px;height:13px;stroke:var(--surface);stroke-width:3;fill:none;opacity:0}
 .task.done .box svg{opacity:1}
+.t-main{flex:1;min-width:0}
+.t-kind{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--brass)}
 .t-name{font-weight:500}
 .t-note{font-size:12.5px;color:var(--muted);margin-top:2px}
+.t-act{display:flex;gap:6px;flex:none;align-items:center}
+.mini{font-size:12px;padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:var(--raise);cursor:pointer;text-decoration:none;white-space:nowrap}
+.mini.on{background:var(--done);border-color:var(--done);color:var(--surface)}
 
-/* ---- cards / forms ---- */
+/* cards/forms */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
 .card + .card{margin-top:10px}
 .row{display:flex;gap:8px;flex-wrap:wrap}
 .row > *{flex:1 1 130px;min-width:0}
-input[type=text],input[type=number],input[type=date],select,textarea{
-  width:100%;background:var(--raise);border:1px solid var(--line);border-radius:9px;
-  padding:10px 11px;margin-top:6px;
-}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;background:var(--raise);border:1px solid var(--line);border-radius:9px;padding:10px 11px;margin-top:6px}
 textarea{resize:vertical;min-height:74px;line-height:1.45}
 label{font-size:12.5px;color:var(--muted);display:block}
 .btn{background:var(--ink);color:var(--bg);border:none;border-radius:9px;padding:11px 16px;font-weight:600;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-.btn.small{padding:7px 12px;font-size:13px}
 .btn:active{opacity:.8}
 .check-inline{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px}
 .check-inline input{width:18px;height:18px;margin:0;accent-color:var(--done)}
 
-/* ---- entries ---- */
+/* entries */
 .entry{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .entry:last-child{border-bottom:none}
 .entry h4{margin:0;font-size:14.5px;font-weight:600;font-family:inherit}
@@ -122,15 +120,32 @@ label{font-size:12.5px;color:var(--muted);display:block}
 .tag{font-size:11.5px;padding:2px 7px;border-radius:5px;background:var(--brass-soft);color:var(--brass);font-weight:600}
 .tag.cold{background:var(--done-soft);color:var(--done)}
 
-/* ---- stats ---- */
+/* stats */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
-.stat .n{font-family:"Fraunces",Georgia,serif;font-size:32px;font-weight:600;line-height:1}
+.stat .n{font-family:"Fraunces",Georgia,serif;font-size:30px;font-weight:600;line-height:1}
 .stat .l{font-size:12.5px;color:var(--muted);margin-top:5px}
 .bar{height:5px;background:var(--line);border-radius:99px;margin-top:9px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--done);border-radius:99px}
 
-/* ---- stories / companies ---- */
+/* 180 grid */
+.g180{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.gc{aspect-ratio:1;border-radius:4px;background:var(--line);border:none;padding:0;cursor:pointer;font-size:9px;color:transparent;position:relative}
+.gc.s1{background:color-mix(in srgb,var(--done) 40%,var(--line))}
+.gc.s2{background:var(--done)}
+.gc.miss{background:var(--warn-soft)}
+.gc.rev{box-shadow:inset 0 0 0 1.5px var(--brass)}
+.gc.now{box-shadow:inset 0 0 0 2.5px var(--ink)}
+.gc.ph{margin-left:0}
+.key{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
+.key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--line)}
+.phrow{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.phrow:last-child{border-bottom:none}
+.phrow .num{font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:700;width:28px;flex:none;color:var(--brass)}
+.phrow h4{margin:0;font-size:14.5px;font-family:inherit;font-weight:600}
+.phrow p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+
+/* accordion */
 .acc{border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--surface);overflow:hidden}
 .acc-h{display:flex;align-items:center;gap:9px;padding:12px 13px;cursor:pointer}
 .acc-h .dot{width:8px;height:8px;border-radius:99px;background:var(--line);flex:none}
@@ -138,72 +153,120 @@ label{font-size:12.5px;color:var(--muted);display:block}
 .acc-h h4{flex:1;margin:0;font-size:14.5px;font-weight:600;font-family:inherit}
 .acc-b{padding:0 13px 13px;display:none}
 .acc.open .acc-b{display:block}
-.co{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
-.co:last-child{border-bottom:none}
-.co-m{flex:1;min-width:0}
-.co-m h4{margin:0;font-size:14px;font-weight:600;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.co-m p{margin:1px 0 0;font-size:12px;color:var(--muted)}
-.co select{width:auto;margin:0;padding:6px 8px;font-size:12.5px;flex:none;max-width:44%}
-.filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch}
+.filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px}
 .chip{white-space:nowrap;padding:7px 13px;border-radius:99px;border:1px solid var(--line);background:var(--surface);font-size:13px;cursor:pointer}
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chk{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.chk:last-child{border-bottom:none}
+.chk .ic{width:20px;height:20px;border-radius:99px;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none;background:var(--line);color:var(--muted)}
+.chk .ic.y{background:var(--done);color:var(--surface)}
+.chk span.v{margin-left:auto;color:var(--muted);font-size:13px}
+.co{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.co:last-child{border-bottom:none}
+.co-m{flex:1;min-width:0}
+.co-m h4{margin:0;font-size:14px;font-weight:600;font-family:inherit}
+.co-m p{margin:1px 0 0;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.co select{width:auto;margin:0;padding:6px 8px;font-size:12.5px;flex:none}
 
-/* ---- nav ---- */
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--surface);
-  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:9}
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:9}
 nav button{flex:1;background:none;border:none;padding:9px 2px 8px;cursor:pointer;color:var(--muted);font-size:11px;font-weight:500}
 nav button.on{color:var(--ink)}
 nav button svg{display:block;margin:0 auto 3px;width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button.on svg{stroke-width:2.2}
 .empty{color:var(--muted);font-size:13.5px;padding:14px 2px}
 .note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));
-  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:13.5px;font-weight:500;
-  opacity:0;pointer-events:none;transition:opacity .18s;z-index:20}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:13.5px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .18s;z-index:20;max-width:90vw;text-align:center}
 .toast.on{opacity:1}
 </style>
 </head>
 <body>
-
 <div class="wrap">
 
-<!-- ============ TODAY ============ -->
+<!-- ============ DAY ============ -->
 <section id="v-today" class="view on">
   <div class="hero">
     <div class="hero-top">
-      <div class="wk" id="h-week">—<small id="h-of"></small></div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap" id="h-badges"></div>
+      <div>
+        <div class="wk" id="h-day">—<small id="h-of"></small></div>
+        <div class="sub" id="h-date"></div>
+      </div>
+      <div class="daynav">
+        <button class="nb" id="d-prev" aria-label="Previous day">‹</button>
+        <button class="nb txt" id="d-now">Today</button>
+        <button class="nb" id="d-next" aria-label="Next day">›</button>
+      </div>
     </div>
     <div class="phase" id="h-phase"></div>
-    <div class="strip" id="h-strip"></div>
-    <div class="strip-key">
-      <span>28 weeks</span><span>Filled = work logged</span><span>Ringed = deload</span>
-    </div>
+    <div class="badges" id="h-badges"></div>
+    <div class="pbar"><i id="h-bar"></i></div>
+    <div id="h-banner"></div>
   </div>
 
   <div class="sec">
-    <div class="sec-head">
-      <h2 id="t-day">Today</h2>
-      <span id="t-count"></span>
-    </div>
+    <div class="sec-head"><h2>Tasks</h2><span id="t-count"></span></div>
     <div id="t-list"></div>
+    <p class="note">The day counts as complete only when every task is checked. Problem and design tasks log themselves; mark a problem <b>Cold</b> if you solved it with no hint inside 25 minutes.</p>
   </div>
 
   <div class="sec">
-    <div class="sec-head"><h2>Quick log</h2></div>
+    <div class="sec-head"><h2>Extra problem</h2><span>outside the plan</span></div>
     <div class="card">
-      <label>Problem solved just now</label>
+      <label>Problem</label>
       <input type="text" id="q-title" placeholder="Longest substring without repeat">
       <div class="row">
         <div><label>Pattern</label><input type="text" id="q-pattern" placeholder="Sliding window"></div>
         <div><label>Minutes</label><input type="number" id="q-min" placeholder="25" min="1"></div>
       </div>
-      <div class="check-inline">
-        <input type="checkbox" id="q-cold"><label for="q-cold" style="font-size:14px;color:var(--ink)">Solved cold, no hint, under 25 min</label>
-      </div>
+      <div class="check-inline"><input type="checkbox" id="q-cold"><label for="q-cold" style="font-size:14px;color:var(--ink)">Solved cold, no hint, under 25 min</label></div>
       <button class="btn" style="margin-top:12px;width:100%" id="q-add">Log problem</button>
     </div>
   </div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section id="v-plan" class="view">
+  <div class="sec-head"><h2>180 days</h2><span id="p-sum"></span></div>
+  <div class="grid2" id="p-cards"></div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>Every day</h2><span>tap a day to open it</span></div>
+    <div class="card">
+      <div class="g180" id="p-grid"></div>
+      <div class="key">
+        <span><i style="background:var(--done)"></i>Complete</span>
+        <span><i style="background:color-mix(in srgb,var(--done) 40%,var(--line))"></i>Partial</span>
+        <span><i style="background:var(--warn-soft)"></i>Missed</span>
+        <span><i style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--brass)"></i>Review day</span>
+        <span><i style="background:transparent;box-shadow:inset 0 0 0 2px var(--ink)"></i>Today</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>Phases</h2></div>
+    <div class="card" id="p-phases"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><h2>Setup</h2></div>
+    <div class="card">
+      <label for="p-start">Day 1 date</label>
+      <input type="date" id="p-start">
+      <p class="note">Changing this shifts the calendar. Ticked tasks stay attached to their day number, not the date.</p>
+    </div>
+    <div class="card">
+      <div class="row">
+        <button class="btn ghost" id="p-export">Download backup</button>
+        <button class="btn ghost" id="p-copy">Copy backup</button>
+        <button class="btn ghost" id="p-import">Restore backup</button>
+      </div>
+      <button class="btn ghost" id="p-theme" style="width:100%;margin-top:8px">Switch theme</button>
+      <p class="note">Everything is stored in this browser only. Download a backup weekly, and before clearing browser data or switching device.</p>
+      <button class="btn ghost" id="p-reset" style="width:100%;margin-top:6px;color:var(--warn);border-color:var(--warn)">Erase all data</button>
+    </div>
+  </div>
+  <input type="file" id="p-file" accept="application/json" hidden>
 </section>
 
 <!-- ============ LOG ============ -->
@@ -221,186 +284,276 @@ nav button.on svg{stroke-width:2.2}
 
 <!-- ============ STORIES ============ -->
 <section id="v-stories" class="view">
-  <div class="sec-head"><h2>Leadership stories</h2><span id="s-count"></span></div>
-  <p class="note" style="margin-top:0">One story per principle, each with a number in it. Reuse stories across principles only when the situation genuinely fits both.</p>
+  <div class="sec-head"><h2>Leadership Principles</h2><span id="s-count"></span></div>
+  <p class="note" style="margin-top:0">One STAR story per principle, each result with a number. Amazon loops spend roughly half the time on these, and the bar raiser digs three levels deep — write what <i>you</i> did, not the team.</p>
   <div id="s-list" style="margin-top:14px"></div>
 </section>
 
-<!-- ============ APPLY ============ -->
+<!-- ============ AMAZON ============ -->
 <section id="v-apply" class="view">
-  <div class="sec-head"><h2>Pipeline</h2><span id="a-count"></span></div>
-  <div class="filters" id="a-tabs"></div>
-  <div class="card" style="padding:0"><div id="a-list"></div></div>
-  <p class="note">Apply order: Tier 3 first (fastest loops, no cooldown), then Tier 1, then Tier 2, and Amazon last — a rejection there locks you out for 6 months.</p>
-</section>
-
-<!-- ============ STATS ============ -->
-<section id="v-stats" class="view">
-  <div class="sec-head"><h2>Progress</h2><span id="p-days"></span></div>
-  <div class="grid2" id="p-cards"></div>
+  <div class="sec-head"><h2>Ready to apply?</h2><span id="a-ready"></span></div>
+  <div class="card" id="a-checks"></div>
+  <p class="note">Plan says apply on day 150. Apply earlier only when every line is green. A rejection usually means a cooldown of around six months before you can re-interview for a similar role, so don't burn the attempt.</p>
 
   <div class="sec">
-    <div class="sec-head"><h2>Setup</h2></div>
-    <div class="card">
-      <label for="p-start">Campaign start date</label>
-      <input type="date" id="p-start">
-      <label for="p-target" style="margin-top:12px">Target apply date</label>
-      <input type="date" id="p-target">
-      <p class="note">28 weeks of work, with week 7, 14, 21 and 28 as deload — review and mocks only, no new material.</p>
-    </div>
+    <div class="sec-head"><h2>Applications</h2><span id="a-count"></span></div>
     <div class="card">
       <div class="row">
-        <button class="btn ghost" id="p-export">Download backup</button>
-        <button class="btn ghost" id="p-import">Restore backup</button>
+        <div><label>Role</label><input type="text" id="a-role" placeholder="SDE II, Amazon Payments"></div>
+        <div><label>Location</label><input type="text" id="a-loc" placeholder="Dublin"></div>
       </div>
-      <button class="btn ghost" id="p-theme" style="width:100%;margin-top:8px">Switch theme</button>
-      <p class="note">Everything is stored in this browser only. Download a backup before clearing browser data or switching device.</p>
-      <button class="btn ghost" id="p-reset" style="width:100%;margin-top:6px;color:var(--warn);border-color:var(--warn)">Erase all data</button>
+      <label style="margin-top:10px">Job ID or link</label><input type="text" id="a-req" placeholder="amazon.jobs/en/jobs/…">
+      <button class="btn" id="a-add" style="width:100%;margin-top:12px">Add application</button>
     </div>
+    <div class="card" style="margin-top:10px"><div id="a-list"></div></div>
   </div>
-  <input type="file" id="p-file" accept="application/json" hidden>
 </section>
 
 </div>
 
 <nav>
-  <button class="on" data-v="today"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Today</button>
+  <button class="on" data-v="today"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Day</button>
+  <button data-v="plan"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg>Plan</button>
   <button data-v="log"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>Log</button>
   <button data-v="stories"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M12 8v8M8 12h8"/></svg>Stories</button>
-  <button data-v="apply"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="17" r="3"/></svg>Apply</button>
-  <button data-v="stats"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19v-6"/></svg>Progress</button>
+  <button data-v="apply"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg>Amazon</button>
 </nav>
-
 <div class="toast" id="toast"></div>
 
 <script>
-/* ---------------- storage ---------------- */
-const KEY="prep-log-v1";
-const blank=()=>({start:iso(new Date()),target:"",days:{},dsa:[],design:[],mock:[],ship:[],stories:{},companies:{},theme:""});
-let S=blank();
-function load(){
-  try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(blank(),JSON.parse(r));}
-  catch(e){toast("Could not read saved data. Starting fresh.");}
-}
-function save(){
-  try{localStorage.setItem(KEY,JSON.stringify(S));}
-  catch(e){toast("Save failed — storage may be full or blocked.");}
-}
+/* ================= storage ================= */
+const KEY="amazon-180-v1";
 function iso(d){return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
-function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("on"),2000)}
+const blank=()=>({start:iso(new Date()),done:{},dsa:[],design:[],mock:[],ship:[],stories:{},apps:[],theme:""});
+let S=blank();
+function load(){try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(blank(),JSON.parse(r));}catch(e){toast("Could not read saved data. Starting fresh.")}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast("Save failed — storage may be full or blocked.")}}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("on"),2400)}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
 
-/* ---------------- plan ---------------- */
-const TOTAL=28, DELOAD=[7,14,21,28];
+/* ================= curriculum ================= */
+const TOTAL=180;
 const PHASES=[
-  {to:8, name:"Patterns", detail:"NeetCode 150 · design fundamentals · SOLID and classic OOD · RAG and MCP core, containerized"},
-  {to:16,name:"Depth",    detail:"Company-tagged mediums · real system designs · concurrency in LLD · agent with traces and evals"},
-  {to:24,name:"Translate",detail:"Hard patterns and speed · turn your own K8s and SaaS work into designs · IaC, CI/CD, public demo"},
-  {to:28,name:"Sharpen",  detail:"Revision and mocks only · all 16 stories finished · repos and profile polished"}
+ {from:1,  to:45, name:"Foundations", detail:"NeetCode 150 by pattern · scaling, caching, databases · SOLID and core OOD patterns · first 6 LP stories"},
+ {from:46, to:100,name:"Depth",       detail:"Finish NeetCode 150 + Amazon-tagged · classic system designs · Amazon-style LLD · all 16 LP stories drafted"},
+ {from:101,to:150,name:"Amazon simulation",detail:"One new + one spaced re-solve daily · weekly OA simulation · resume, referrals · apply on day 150"},
+ {from:151,to:180,name:"Loop ready",  detail:"OA and loop mocks · bar-raiser LP drills · timed re-solves · system and LLD mocks"}
 ];
-const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-const PLAN={
- 0:[["m","Two problems, new pattern","25 min hard cap each"],["m","Anki pattern review",""],["n","Read one system design case study",""],["n","Record one problem solved out loud","In English, full reasoning"]],
- 1:[["m","Two problems","Same pattern family as yesterday"],["m","Anki pattern review",""],["n","One low-level design","Rate limiter, parking lot, notifier"]],
- 2:[["m","Two problems",""],["m","Anki pattern review",""],["n","One system design, 40 min timer","Write it, don't read it"],["n","Record one problem solved out loud",""]],
- 3:[["m","Two problems",""],["m","Anki pattern review",""],["n","Write one leadership story","STAR, and it must contain a number"]],
- 4:[["m","Two problems, revision only","No new material today"],["m","Anki pattern review",""],["n","Re-solve one flagged problem",""],["n","Record one problem solved out loud",""]],
- 5:[["m","Full mock interview, 45 min",""],["m","Break down the mock feedback","Write what you would change"],["n","One system design deep dive",""],["n","Weekly review","Cold-solve rate, story count, what slipped"]],
- 6:[["m","Project milestone — commit and push",""],["m","Deploy it and update the README",""],["n","Plan next week's pattern",""]]
+const phaseOf=d=>PHASES.find(p=>d<=p.to)||PHASES[3];
+
+const NC=[
+ ["Arrays & hashing",["Contains Duplicate","Valid Anagram","Two Sum","Group Anagrams","Top K Frequent Elements","Encode and Decode Strings","Product of Array Except Self","Valid Sudoku","Longest Consecutive Sequence"]],
+ ["Two pointers",["Valid Palindrome","Two Sum II - Input Array Is Sorted","3Sum","Container With Most Water","Trapping Rain Water"]],
+ ["Sliding window",["Best Time to Buy and Sell Stock","Longest Substring Without Repeating Characters","Longest Repeating Character Replacement","Permutation in String","Minimum Window Substring","Sliding Window Maximum"]],
+ ["Stack",["Valid Parentheses","Min Stack","Evaluate Reverse Polish Notation","Generate Parentheses","Daily Temperatures","Car Fleet","Largest Rectangle in Histogram"]],
+ ["Binary search",["Binary Search","Search a 2D Matrix","Koko Eating Bananas","Find Minimum in Rotated Sorted Array","Search in Rotated Sorted Array","Time Based Key-Value Store","Median of Two Sorted Arrays"]],
+ ["Linked list",["Reverse Linked List","Merge Two Sorted Lists","Reorder List","Remove Nth Node From End of List","Copy List with Random Pointer","Add Two Numbers","Linked List Cycle","Find the Duplicate Number","LRU Cache","Merge k Sorted Lists","Reverse Nodes in k-Group"]],
+ ["Trees",["Invert Binary Tree","Maximum Depth of Binary Tree","Diameter of Binary Tree","Balanced Binary Tree","Same Tree","Subtree of Another Tree","Lowest Common Ancestor of a Binary Search Tree","Binary Tree Level Order Traversal","Binary Tree Right Side View","Count Good Nodes in Binary Tree","Validate Binary Search Tree","Kth Smallest Element in a BST","Construct Binary Tree from Preorder and Inorder Traversal","Binary Tree Maximum Path Sum","Serialize and Deserialize Binary Tree"]],
+ ["Tries",["Implement Trie (Prefix Tree)","Design Add and Search Words Data Structure","Word Search II"]],
+ ["Heap",["Kth Largest Element in a Stream","Last Stone Weight","K Closest Points to Origin","Kth Largest Element in an Array","Task Scheduler","Design Twitter","Find Median from Data Stream"]],
+ ["Backtracking",["Subsets","Combination Sum","Permutations","Subsets II","Combination Sum II","Word Search","Palindrome Partitioning","Letter Combinations of a Phone Number","N-Queens"]],
+ ["Graphs",["Number of Islands","Clone Graph","Max Area of Island","Pacific Atlantic Water Flow","Surrounded Regions","Rotting Oranges","Walls and Gates","Course Schedule","Course Schedule II","Redundant Connection","Number of Connected Components in an Undirected Graph","Graph Valid Tree","Word Ladder"]],
+ ["Advanced graphs",["Reconstruct Itinerary","Min Cost to Connect All Points","Network Delay Time","Swim in Rising Water","Alien Dictionary","Cheapest Flights Within K Stops"]],
+ ["1-D DP",["Climbing Stairs","Min Cost Climbing Stairs","House Robber","House Robber II","Longest Palindromic Substring","Palindromic Substrings","Decode Ways","Coin Change","Maximum Product Subarray","Word Break","Longest Increasing Subsequence","Partition Equal Subset Sum"]],
+ ["2-D DP",["Unique Paths","Longest Common Subsequence","Best Time to Buy and Sell Stock with Cooldown","Coin Change II","Target Sum","Interleaving String","Longest Increasing Path in a Matrix","Distinct Subsequences","Edit Distance","Burst Balloons","Regular Expression Matching"]],
+ ["Greedy",["Maximum Subarray","Jump Game","Jump Game II","Gas Station","Hand of Straights","Merge Triplets to Form Target Triplet","Partition Labels","Valid Parenthesis String"]],
+ ["Intervals",["Insert Interval","Merge Intervals","Non-overlapping Intervals","Meeting Rooms","Meeting Rooms II","Minimum Interval to Include Each Query"]],
+ ["Math & geometry",["Rotate Image","Spiral Matrix","Set Matrix Zeroes","Happy Number","Plus One","Pow(x, n)","Multiply Strings","Detect Squares"]],
+ ["Bit manipulation",["Single Number","Number of 1 Bits","Counting Bits","Reverse Bits","Missing Number","Sum of Two Integers","Reverse Integer"]]
+];
+const AMZ=[["Reorganize String","Heap"],["Top K Frequent Words","Heap"],["Search Suggestions System","Trie"],["Most Common Word","Hashing"],["Reorder Data in Log Files","Sorting"],["Critical Connections in a Network","Graphs · Tarjan"],["Minimum Cost to Connect Sticks","Heap"],["Concatenated Words","DP"],["Maximal Square","2-D DP"],["Robot Bounded In Circle","Math"],["Find All Anagrams in a String","Sliding window"],["Subarray Sum Equals K","Prefix sum"],["Basic Calculator II","Stack"],["Sliding Window Median","Two heaps"],["LFU Cache","Design"],["Design Hit Counter","Design"],["Snapshot Array","Binary search"],["Insert Delete GetRandom O(1)","Design"],["Asteroid Collision","Stack"],["Decode String","Stack"],["Next Permutation","Arrays"],["Integer to English Words","Strings"],["Trapping Rain Water II","Heap · BFS"],["Shortest Path in Binary Matrix","BFS"],["Making A Large Island","Graphs"],["Bus Routes","BFS"],["Count of Smaller Numbers After Self","Merge sort / BIT"],["Maximum Frequency Stack","Design"],["Kth Smallest Element in a Sorted Matrix","Binary search"],["Find K Pairs with Smallest Sums","Heap"],["Vertical Order Traversal of a Binary Tree","Trees"],["All Nodes Distance K in Binary Tree","Trees · BFS"],["Path Sum III","Prefix sum"],["Minimum Path Sum","2-D DP"],["Maximal Rectangle","Monotonic stack"],["Word Break II","Backtracking"],["Word Ladder II","BFS"],["Number of Provinces","Union find"],["Accounts Merge","Union find"],["Open the Lock","BFS"],["Evaluate Division","Graphs"],["Minimum Number of Refueling Stops","Heap"],["Longest String Chain","DP"],["Sum of Subarray Minimums","Monotonic stack"],["Design Underground System","Design"],["Time Needed to Inform All Employees","DFS"],["Number of Visible People in a Queue","Monotonic stack"],["Rotting Oranges","BFS"]];
+const Q=[]; NC.forEach(([p,a])=>a.forEach(n=>Q.push({prob:n,pat:p})));
+AMZ.forEach(([n,p])=>{if(!Q.some(q=>q.prob===n))Q.push({prob:n,pat:"Amazon-tagged · "+p})});
+
+const SD=["Scaling basics: load balancers, stateless services, CAP","Caching: strategies, eviction, CDN, invalidation","Databases: SQL vs NoSQL, indexes, replication, sharding","Consistent hashing + Amazon's Dynamo paper","Queues and streams: SQS, SNS, Kafka, back-pressure","Estimation, API design and distributed rate limiting",
+ "Design a URL shortener","Design a distributed rate limiter","Design a news feed","Design a chat system","Design a notification system","Design Amazon search typeahead","Design Amazon cart and checkout","Design inventory for a flash sale","Design a payment system (idempotency)","Design a distributed key-value store","Design a web crawler","Design Prime Video streaming","Design 'customers also bought' recommendations","Design a location / delivery tracking service","Design a distributed job scheduler","Design metrics and logging (CloudWatch)","Design file storage (S3-style)","Design a ticket booking system","Design Amazon Locker pickup","Redo your two weakest designs"];
+const LLD=["SOLID + Strategy, Factory, Observer","Builder, Singleton, Decorator, State","Parking lot","Amazon Locker","Elevator system","Vending machine","Unix 'find' with filters (Amazon classic)","LRU cache as a class, thread-safe","Library management","Movie ticket booking","Splitwise","Rate limiter class (token bucket)","Logger with levels and sinks","In-memory pub-sub","Online shopping cart with discounts","Hotel booking","Chess","Thread-safe bounded blocking queue","Task scheduler with worker pool","Inventory management","Deck of cards / card game","Ride hailing matcher","ATM","Meeting room scheduler","Snake and ladder","Redo your weakest LLD"];
+const CS=["Big-O, recursion, recurrence trees","Hash tables: collisions, resizing","Processes, threads, locks","TCP vs UDP, HTTP/2, TLS handshake","DNS and L4 vs L7 load balancing","Indexes: B-tree vs LSM-tree","Transactions and isolation levels","Replication and consensus (Raft)","Leader election, quorum reads/writes","Idempotency, retries, exponential backoff","Event-driven architecture, outbox pattern","Observability: logs, metrics, traces, SLOs","AWS compute: EC2, ELB, Auto Scaling, Lambda","AWS data: DynamoDB keys and GSIs, S3, SQS","Kubernetes scheduling and autoscaling","Deadlocks, producer-consumer, semaphores","Bloom filters and HyperLogLog","Geohash and quadtrees","Inverted index and search ranking","Cache stampede and hot keys","Sagas vs two-phase commit","AuthN/AuthZ, OAuth2, JWT","Deployments: one-box, canary, rollback","Garbage collection and memory leaks","Back-of-envelope numbers to memorise","Revision: weakest topic"];
+const PROJ=["Write a one-page design doc for your portfolio project (RAG + MCP support agent on AWS)","Repo scaffold, Dockerfile, GitHub Actions CI with tests","Ingestion pipeline: chunking + embeddings","Vector store + retrieval API with p95 latency logged","MCP server exposing two real tools","Agent loop (LangGraph) calling the MCP tools","Tracing + evaluation harness with a score","Deploy on AWS with IaC (Terraform or CDK)","Auth, rate limiting, input validation","Load test and cost-per-request report","Architecture write-up with real numbers","Fix the slowest path you measured","Add caching layer, measure the win","Failure drill: kill a dependency, document recovery","Security pass: Trivy, dependency audit, secrets","Public demo + 2-minute video","Turn project into 3 resume bullets with numbers","Open-source PR to a tool you use","Write a LinkedIn post on one design decision","Refactor the weakest module","Add a dashboard for the metrics","Polish README for a reviewer reading in 60 seconds","Update GitHub profile pinned repos","Final resume review against Amazon job description","Rest — keep the repo green","Rest — keep the repo green"];
+const LPS=["Customer Obsession","Ownership","Invent and Simplify","Are Right, A Lot","Learn and Be Curious","Hire and Develop the Best","Insist on the Highest Standards","Think Big","Bias for Action","Frugality","Earn Trust","Dive Deep","Have Backbone; Disagree and Commit","Deliver Results","Strive to be Earth's Best Employer","Success and Scale Bring Broad Responsibility"];
+// one story per week for weeks 1–16, most-asked principles first
+const LP_ORDER=[0,1,13,11,9,12,3,4,8,10,2,6,7,5,14,15];
+
+const SPECIAL={
+ 1:[["m","Setup: LeetCode list, Anki deck, pick your interview language","Use one language for all 180 days"]],
+ 45:[["n","Checkpoint: Phase 1 review","80+ problems logged? Can you explain 6 design fundamentals without notes?"]],
+ 100:[["n","Checkpoint: Phase 2 review","NeetCode 150 done, 16 LP stories drafted, 6+ system designs logged"]],
+ 120:[["n","Rewrite resume for Amazon","Every bullet: action + number + impact. One page."]],
+ 130:[["n","Ask for 2 Amazon referrals","CUET alumni and LinkedIn contacts at Amazon"]],
+ 140:[["n","Go / no-go check","Open the Amazon tab — every readiness line green?"]],
+ 150:[["n","Apply: 3–5 Amazon SDE roles","Use referrals. Log each in the Amazon tab."]],
+ 160:[["n","Follow up with recruiter or referrer","Short, polite, one line on your fit"]],
+ 180:[["n","Final: full mock loop, 4 rounds back to back","Coding ×2, system design, LP-heavy round"]]
 };
-const PLAN_DELOAD=[["m","Anki review only",""],["m","One mock interview",""],["n","Rest, or catch up on side work","Deload weeks are how you reach week 28"]];
-const LPS=["Customer obsession","Ownership","Invent and simplify","Are right, a lot","Learn and be curious","Hire and develop the best","Insist on the highest standards","Think big","Bias for action","Frugality","Earn trust","Dive deep","Have backbone; disagree and commit","Deliver results","Strive to be Earth's best employer","Success and scale bring broad responsibility"];
-const COS=[
- ["Agoda","Bangkok",1],["Rakuten","Tokyo",1],["Mercari","Tokyo",1],["PayPay","Tokyo",1],["LY Corp","Tokyo",1],
- ["Woven by Toyota","Tokyo",1],["Indeed","Tokyo",1],["Coupang","Seoul",1],["Shopee / Sea","Singapore",1],["Grab","Singapore",1],
- ["Careem","Dubai",1],["Talabat","Dubai",1],["noon","Dubai",1],["Tabby","Dubai / Riyadh",1],["Property Finder","Dubai",1],
- ["Booking.com","Amsterdam",2],["Adyen","Amsterdam",2],["Just Eat Takeaway","Amsterdam",2],["Miro","Amsterdam",2],["Uber","Amsterdam",2],
- ["Databricks","Amsterdam",2],["Zalando","Berlin",2],["Delivery Hero","Berlin",2],["HelloFresh","Berlin",2],["N26","Berlin",2],
- ["Trade Republic","Berlin",2],["GetYourGuide","Berlin",2],["Personio","Munich",2],["Celonis","Munich",2],["Klarna","Stockholm",2],
- ["Spotify","Stockholm",2],["Revolut","London",2],["Wise","London / Tallinn",2],["Monzo","London",2],["Checkout.com","London",2],
- ["Deliveroo","London",2],["Workday","Dublin",2],["Stripe","Dublin",2],["MongoDB","Dublin",2],["Salesforce","Dublin",2],
- ["Canonical","Remote",3],["GitLab","Remote",3],["Grafana Labs","Remote",3],["Datadog","Paris / Dublin",3],["Elastic","Amsterdam / remote",3],
- ["Cloudflare","Lisbon / London",3],["HashiCorp","Dublin / remote",3],["Snowflake","Berlin / Dublin",3],["Confluent","London / remote",3],["Nebius","Amsterdam",3],
- ["Amazon","Dublin / Luxembourg",0],["Google","Dublin / Zurich",4],["Microsoft","Dublin / Prague",4],["Meta","London",4],["Apple","Cork / Munich",4],
- ["Bloomberg","London",4],["TikTok","London / Dublin",4],["Palantir","London",4],["Optiver","Amsterdam",4],["Jane Street","London",4]
-];
-const TIERS={0:"Target",1:"Tier 1 · Asia and Gulf",2:"Tier 2 · Europe",3:"Tier 3 · Infra",4:"Stretch"};
-const STATUS=["Not applied","Applied","Screen","Onsite","Offer","Rejected"];
-const TARGETS={dsa:280,design:56,mock:28,ship:28,stories:16};
 
-/* ---------------- derived ---------------- */
-function weekNo(d=new Date()){
-  const s=new Date(S.start+"T00:00:00");
-  return Math.floor((new Date(iso(d)+"T00:00:00")-s)/864e5/7)+1;
-}
-const isDeload=w=>DELOAD.includes(w);
-function phaseOf(w){return PHASES.find(p=>w<=p.to)||PHASES[3]}
-function tasksFor(date){
-  const w=weekNo(date), d=date.getDay();
-  const src=isDeload(w)?PLAN_DELOAD:PLAN[d];
-  return src.map((t,i)=>({id:d+"-"+i+(isDeload(w)?"-dl":""),slot:t[0],name:t[1],note:t[2]}));
-}
-const dayDone=k=>S.days[k]||[];
-function weekFill(w){
-  const s=new Date(S.start+"T00:00:00"); s.setDate(s.getDate()+(w-1)*7);
-  let n=0;
-  for(let i=0;i<7;i++){const k=iso(new Date(s.getTime()+i*864e5)); n+=dayDone(k).length;}
-  const dsa=S.dsa.filter(x=>weekNo(new Date(x.date+"T00:00:00"))===w).length;
-  const score=n+dsa;
-  return score===0?0:score<8?1:score<18?2:3;
-}
-function streak(){
-  let n=0,d=new Date();
-  if(dayDone(iso(d)).length===0) d.setDate(d.getDate()-1);
-  while(dayDone(iso(d)).length>0){n++;d.setDate(d.getDate()-1)}
-  return n;
-}
-function coldRate(){
-  const last=S.dsa.slice(-40);
-  if(!last.length) return null;
-  return Math.round(last.filter(x=>x.cold).length/last.length*100);
-}
+/* ---- build the 180-day plan once ---- */
+const PLAN={};
+(function build(){
+  let qi=0, rsi=0; const seen=[];
+  const fresh=d=>{if(qi<Q.length){const p=Q[qi++];seen.push({...p,day:d});return {...p,kind:"New"}}return resolve(d)};
+  const resolve=d=>{const pool=seen.filter(x=>x.day<=d-21);if(!pool.length)return {...Q[rsi++%Q.length],kind:"Re-solve"};const p=pool[rsi++%pool.length];return {prob:p.prob,pat:p.pat,kind:"Re-solve cold",from:p.day}};
+  for(let d=1;d<=TOTAL;d++){
+    const w=Math.ceil(d/7), r=(d-1)%7, ph=PHASES.indexOf(phaseOf(d)), t=[];
+    const add=(slot,type,name,note,x={})=>t.push({id:"d"+d+"-"+t.length,slot,type,name,note:note||"",...x});
+    const prob=p=>add("m","dsa",p.prob,p.pat+(p.from?" · first solved day "+p.from:"")+" · 25 min cap",{prob:p.prob,pat:p.pat,kind:p.kind});
+    const sd=SD[Math.min(w,SD.length)-1], lld=LLD[Math.min(w,LLD.length)-1], cs=CS[Math.min(w,CS.length)-1];
+    const sdRe=SD[6+((w*3+r)%19)], lldRe=LLD[2+((w*2+r)%23)];
 
-/* ---------------- render: today ---------------- */
-function renderToday(){
-  const now=new Date(), w=Math.max(1,weekNo(now)), ph=phaseOf(w);
-  $("#h-week").firstChild.nodeValue = w>TOTAL? "Done" : "Week "+w;
-  $("#h-of").textContent = w>TOTAL? "" : " of "+TOTAL;
-  const st=streak(), b=[];
-  if(isDeload(w)) b.push('<span class="badge deload">Deload week</span>');
-  if(st>1) b.push('<span class="badge streak">'+st+'-day streak</span>');
-  if(S.target){
-    const left=Math.ceil((new Date(S.target+"T00:00:00")-now)/864e5);
-    if(left>0) b.push('<span class="badge">'+left+' days to apply</span>');
+    if(r===6){ // weekly review day
+      const mk=ph===0?"Coding mock, 45 min (peer or Pramp)":["Coding mock, 45 min","System design mock, 60 min","Behavioral mock: 4 LP questions"][w%3];
+      add("m","mock",mk,"Talk the whole time. Log the score in Log → Mocks.");
+      add("m","review","Re-solve this week's flagged problems","",{dyn:"week",w});
+      add("n","plain","Anki: full pattern deck review","");
+      add("n","plain","Weekly retro + plan next week","Cold-solve rate, what slipped, one thing to change");
+    } else if(ph<=1){ // Foundations + Depth
+      prob(fresh(d)); prob(fresh(d));
+      add("m","plain","Anki: due pattern cards","10 minutes");
+      if(r===0) add("n","sd1","System design: "+sd,"Requirements, estimates, API, high-level diagram. Write it, don't read it. 45 min.",{topic:sd});
+      if(r===1) add("n","story","LP story: "+LPS[LP_ORDER[(w-1)%16]], w<=16?"Write it in the Stories tab — STAR, one number in the result":"Rehearse out loud, then answer: why, what would you change?");
+      if(r===2) add("n","sd","Deep dive: "+sd,"Data model, bottleneck, failure modes, trade-offs. Then post it on LinkedIn.",{topic:sd});
+      if(r===3) add("n","lld","Low-level design: "+lld,"Classes, interfaces, one pattern, code the core in 40 min",{topic:lld});
+      if(r===4){ add("n","plain","Fundamentals: "+cs,"30 min, then write 5 bullets you could say in an interview"); add("n","plain","Record one of today's problems out loud","Clarify → brute force → optimise → code → test"); }
+      if(r===5) add("n","ship","Project: "+PROJ[(w-1)%PROJ.length],"Commit, push, update README");
+    } else if(ph===2){ // Amazon simulation
+      if(r===4){
+        add("m","oa","Amazon OA simulation: 2 problems, 90 min","Unseen Amazon-tagged mediums. No pausing, no hints.");
+        add("m","plain","OA review: write the faster approach for anything over 40 min","");
+        add("n","plain","Work-style assessment practice","Answer the way the Leadership Principles read");
+      } else {
+        prob(fresh(d)); prob(resolve(d));
+        add("m","plain","Anki: due pattern cards","10 minutes");
+        if(r===0) add("n","sd","System design, 45 min timer: "+sdRe,"Full answer end to end, then compare with a reference",{topic:sdRe});
+        if(r===1) add("n","story","Rehearse LP: "+LPS[(w*2)%16]+" + "+LPS[(w*2+1)%16],"Record both, then 3 follow-ups each");
+        if(r===2) add("n","lld","LLD, 40 min timer: "+lldRe,"Code it, run it",{topic:lldRe});
+        if(r===3) add("n","plain","Fundamentals: "+cs,"5 interview-ready bullets");
+        if(r===5) add("n","ship","Project: "+PROJ[(w-1)%PROJ.length],"Commit, push, update README");
+      }
+    } else { // Loop ready
+      if(r===0){ add("m","oa","Amazon OA simulation: 2 problems, 90 min","Unseen problems, strict timer"); add("m","plain","OA review","Write down every bug you made"); add("n","plain","Work-style assessment practice",""); }
+      if(r===1){ prob(resolve(d)); prob(resolve(d)); add("n","mock","Behavioral mock: 4 LP questions with follow-ups","Log the score"); }
+      if(r===2){ prob(resolve(d)); add("n","sd","System design mock, 60 min: "+sdRe,"Out loud, with someone or recorded",{topic:sdRe}); }
+      if(r===3){ prob(resolve(d)); add("n","lld","LLD mock, 45 min: "+lldRe,"Out loud, code the core",{topic:lldRe}); }
+      if(r===4){ prob(resolve(d)); prob(resolve(d)); add("n","story","Bar-raiser drill: 3 stories, 3 levels of 'why' each","Which decision was yours? What data? What failed?"); }
+      if(r===5){ add("m","plain","Timed set: 3 Amazon-tagged problems, 75 min","Mix of medium and one hard"); add("n","ship","Project: "+PROJ[(w-1)%PROJ.length],""); }
+    }
+    (SPECIAL[d]||[]).forEach(s=>add(s[0],"special",s[1],s[2]));
+    t.sort((a,b)=>a.slot===b.slot?0:a.slot==="m"?-1:1);
+    PLAN[d]=t;
   }
+})();
+
+/* ================= derived ================= */
+function dOf(n){const s=new Date(S.start+"T00:00:00");s.setDate(s.getDate()+n-1);return s}
+function dayNo(dt=new Date()){const s=new Date(S.start+"T00:00:00"),t=new Date(iso(dt)+"T00:00:00");return Math.round((t-s)/864e5)+1}
+const clamp=n=>Math.min(TOTAL,Math.max(1,n));
+const fmt=d=>d.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+function state(d){const ts=PLAN[d],dn=S.done[d]||[],c=ts.filter(t=>dn.includes(t.id)).length;return c===0?0:c===ts.length?2:1}
+const completeCount=()=>{let n=0;for(let d=1;d<=TOTAL;d++)if(state(d)===2)n++;return n};
+function streak(){let d=clamp(dayNo());if(dayNo()<1)return 0;if(state(d)!==2)d--;let n=0;while(d>=1&&state(d)===2){n++;d--}return n}
+function coldRate(){const l=S.dsa.slice(-40);return l.length?Math.round(l.filter(x=>x.cold).length/l.length*100):null}
+const hldN=()=>S.design.filter(d=>d.kind==="System design").length;
+const lldN=()=>S.design.length-hldN();
+const storiesN=()=>LPS.filter(l=>(S.stories[l]?.s||"").trim()&&(S.stories[l]?.r||"").trim()).length;
+const mocks4=()=>S.mock.filter(m=>+m.score>=4).length;
+
+/* ================= DAY view ================= */
+let VD=null;
+function renderToday(){
+  const tn=dayNo(); if(VD===null) VD=clamp(tn);
+  const d=VD, ts=PLAN[d], dn=S.done[d]||[], ph=phaseOf(d), w=Math.ceil(d/7), rev=(d-1)%7===6, st=state(d);
+  $("#h-day").firstChild.nodeValue="Day "+d; $("#h-of").textContent=" of "+TOTAL;
+  const rel=d===tn?"today":d<tn?(tn-d)+(tn-d>1?" days ago":" day ago"):"in "+(d-tn)+(d-tn>1?" days":" day");
+  $("#h-date").textContent=fmt(dOf(d))+" · Week "+w+" · "+rel;
+  $("#h-phase").innerHTML="<b>Phase "+(PHASES.indexOf(ph)+1)+" · "+ph.name+"</b> — "+ph.detail;
+  const b=[];
+  if(st===2) b.push('<span class="badge ok">Day complete</span>');
+  if(rev) b.push('<span class="badge rev">Review day</span>');
+  const sk=streak(); if(sk>1) b.push('<span class="badge streak">'+sk+'-day streak</span>');
+  b.push('<span class="badge">'+completeCount()+' of 180 complete</span>');
+  if(tn<1) b.push('<span class="badge">Starts in '+(1-tn)+' days</span>');
   $("#h-badges").innerHTML=b.join("");
-  $("#h-phase").innerHTML="<b>"+ph.name+"</b> — "+ph.detail;
+  const c=ts.filter(t=>dn.includes(t.id)).length;
+  $("#h-bar").style.width=Math.round(c/ts.length*100)+"%";
+  $("#h-banner").innerHTML=st===2?'<div class="done-banner">Day '+d+' done. '+(d<TOTAL?'Tomorrow: '+esc(PLAN[d+1][0].name):'All 180 days finished. Go get the offer.')+'</div>':"";
+  $("#t-count").textContent=c+" of "+ts.length+" done";
+  $("#d-prev").disabled=d<=1; $("#d-next").disabled=d>=TOTAL;
 
-  $("#h-strip").innerHTML=Array.from({length:TOTAL},(_,i)=>{
-    const n=i+1;
-    return '<div class="cell'+(isDeload(n)?" deload":"")+(n===w?" now":"")+'" data-fill="'+weekFill(n)+'" title="Week '+n+'"></div>';
-  }).join("");
-
-  const key=iso(now), done=dayDone(key), ts=tasksFor(now);
-  $("#t-day").textContent=DAYS[now.getDay()];
-  $("#t-count").textContent=done.length+" of "+ts.length+" done";
   let html="",slot="";
+  const KIND={dsa:"Problem",sd1:"System design",sd:"System design",lld:"Low-level design",story:"Leadership",mock:"Mock",oa:"Online assessment",review:"Review",ship:"Project",special:"Milestone",plain:""};
   ts.forEach(t=>{
-    if(t.slot!==slot){slot=t.slot;html+='<div class="slot">'+(slot==="m"?"Morning · 6:00–7:15":"Evening · 10:00–10:45")+'</div>';}
-    const on=done.includes(t.id);
-    html+='<div class="task'+(on?" done":"")+'" data-t="'+t.id+'"><div class="box"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>'+
-      '<div><div class="t-name">'+esc(t.name)+'</div>'+(t.note?'<div class="t-note">'+esc(t.note)+'</div>':'')+'</div></div>';
+    if(t.slot!==slot){slot=t.slot;html+='<div class="slot">'+(slot==="m"?"Morning · before your 2 PM shift":"Night · after 10 PM")+'</div>';}
+    const on=dn.includes(t.id);
+    let note=t.note;
+    if(t.dyn==="week"){
+      const lo=(t.w-1)*7+1, hi=t.w*7-1;
+      const flag=S.dsa.filter(e=>e.day>=lo&&e.day<=hi&&!e.cold).map(e=>e.title);
+      note=flag.length?"Not cold yet: "+flag.slice(0,4).join(", ")+(flag.length>4?" +"+(flag.length-4)+" more":""):"Nothing flagged — re-solve 3 problems from two weeks ago";
+    }
+    let act="";
+    if(t.type==="dsa"){
+      const e=S.dsa.find(x=>x.tid===t.id);
+      act='<a class="mini" target="_blank" rel="noopener" href="https://leetcode.com/problemset/?search='+encodeURIComponent(t.prob)+'" data-stop>Open ↗</a>';
+      if(on) act+='<button class="mini'+(e&&e.cold?" on":"")+'" data-cold="'+t.id+'" data-stop>'+(e&&e.cold?"Cold ✓":"Cold?")+'</button>';
+    }
+    const kind=t.type==="dsa"?(t.kind||"Problem"):KIND[t.type];
+    html+='<div class="task'+(on?" done":"")+(t.type==="special"?" special":"")+'" data-t="'+t.id+'"><div class="box"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>'+
+      '<div class="t-main">'+(kind?'<div class="t-kind">'+esc(kind)+'</div>':'')+'<div class="t-name">'+esc(t.name)+'</div>'+(note?'<div class="t-note">'+esc(note)+'</div>':'')+'</div>'+
+      (act?'<div class="t-act">'+act+'</div>':'')+'</div>';
   });
   $("#t-list").innerHTML=html;
-  $$("#t-list .task").forEach(el=>el.onclick=()=>{
-    const id=el.dataset.t, d=dayDone(key), i=d.indexOf(id);
-    i<0?d.push(id):d.splice(i,1);
-    S.days[key]=d; save(); renderToday();
+  $$("#t-list [data-stop]").forEach(el=>el.addEventListener("click",e=>e.stopPropagation()));
+  $$("#t-list [data-cold]").forEach(el=>el.onclick=e=>{
+    e.stopPropagation(); const x=S.dsa.find(z=>z.tid===el.dataset.cold); if(x){x.cold=!x.cold;save();renderToday()}
   });
+  $$("#t-list .task").forEach(el=>el.onclick=()=>toggle(d,ts.find(t=>t.id===el.dataset.t)));
+}
+function toggle(d,t){
+  const dn=S.done[d]||(S.done[d]=[]), i=dn.indexOf(t.id), was=state(d);
+  if(i<0){dn.push(t.id);autoLog(d,t,true)}else{dn.splice(i,1);autoLog(d,t,false)}
+  save(); renderToday();
+  if(was!==2&&state(d)===2){toast("Day "+d+" complete — "+completeCount()+" of 180");window.scrollTo({top:0,behavior:"smooth"})}
+}
+function autoLog(d,t,on){
+  const k=t.type==="dsa"?"dsa":(t.type==="sd"||t.type==="lld")?"design":null; if(!k) return;
+  if(!on){S[k]=S[k].filter(e=>e.tid!==t.id);return}
+  if(S[k].some(e=>e.tid===t.id)) return;
+  if(k==="dsa") S.dsa.push({tid:t.id,title:t.prob,pattern:t.pat,min:"",cold:false,date:iso(new Date()),day:d});
+  else S.design.push({tid:t.id,title:t.topic,kind:t.type==="sd"?"System design":"Low-level design",min:"",note:"",date:iso(new Date()),day:d});
 }
 
-/* ---------------- render: log ---------------- */
+/* ================= PLAN view ================= */
+function renderPlan(){
+  const tn=dayNo(), comp=completeCount(), cr=coldRate();
+  $("#p-sum").textContent=tn<1?"Starts in "+(1-tn)+" days":tn>TOTAL?"Plan finished":"Day "+tn+" today";
+  const cards=[
+    ["Days complete",comp,"of 180",comp/180],
+    ["Current streak",streak(),"days in a row",Math.min(1,streak()/30)],
+    ["Cold-solve rate",cr===null?"—":cr+"%","last 40 · target 70%",cr===null?0:cr/70],
+    ["Problems",S.dsa.length,"target 220+",S.dsa.length/220],
+    ["System designs",hldN(),"target 20",hldN()/20],
+    ["Low-level designs",lldN(),"target 20",lldN()/20],
+    ["LP stories",storiesN(),"of 16",storiesN()/16],
+    ["Mocks scoring 4+",mocks4(),"of "+S.mock.length+" logged",S.mock.length?mocks4()/S.mock.length:0]
+  ];
+  $("#p-cards").innerHTML=cards.map(c=>'<div class="stat"><div class="n">'+c[1]+'</div><div class="l">'+c[0]+'</div><div class="l" style="margin-top:1px">'+c[2]+'</div><div class="bar"><i style="width:'+Math.min(100,Math.round(c[3]*100))+'%"></i></div></div>').join("");
+  let g="";
+  for(let d=1;d<=TOTAL;d++){
+    const s=state(d), cls=["gc"];
+    if(s===2)cls.push("s2");else if(s===1)cls.push("s1");else if(d<tn)cls.push("miss");
+    if((d-1)%7===6)cls.push("rev"); if(d===tn)cls.push("now");
+    g+='<button class="'+cls.join(" ")+'" data-d="'+d+'" title="Day '+d+' · '+fmt(dOf(d))+'">'+d+'</button>';
+  }
+  $("#p-grid").innerHTML=g;
+  $$("#p-grid .gc").forEach(b=>b.onclick=()=>{VD=+b.dataset.d;go("today")});
+  $("#p-phases").innerHTML=PHASES.map((p,i)=>{
+    let c=0;for(let d=p.from;d<=p.to;d++)if(state(d)===2)c++;
+    return '<div class="phrow"><div class="num">'+(i+1)+'</div><div><h4>'+p.name+' · days '+p.from+'–'+p.to+'</h4><p>'+fmt(dOf(p.from))+' → '+fmt(dOf(p.to))+' · '+c+' of '+(p.to-p.from+1)+' complete</p><p>'+p.detail+'</p></div></div>';
+  }).join("");
+  $("#p-start").value=S.start;
+}
+
+/* ================= LOG view ================= */
 let LT="dsa";
 const FORMS={
   dsa:`<div class="card"><label>Problem</label><input type="text" id="f1" placeholder="Course schedule II">
@@ -408,158 +561,151 @@ const FORMS={
     <div><label>Minutes</label><input type="number" id="f3" min="1" placeholder="25"></div></div>
     <div class="check-inline"><input type="checkbox" id="f4"><label for="f4" style="font-size:14px;color:var(--ink)">Solved cold, no hint</label></div>
     <button class="btn" id="f-add" style="width:100%;margin-top:12px">Log problem</button></div>`,
-  design:`<div class="card"><label>What you designed</label><input type="text" id="f1" placeholder="Multi-tenant chat backend">
+  design:`<div class="card"><label>What you designed</label><input type="text" id="f1" placeholder="Amazon cart and checkout">
     <div class="row"><div><label>Kind</label><select id="f2"><option>System design</option><option>Low-level design</option></select></div>
     <div><label>Minutes</label><input type="number" id="f3" min="1" placeholder="40"></div></div>
-    <label style="margin-top:10px">What you got wrong</label><textarea id="f4" placeholder="Forgot to size the write path. Skipped the failure mode entirely."></textarea>
+    <label style="margin-top:10px">What you got wrong</label><textarea id="f4" placeholder="Forgot to size the write path. Skipped the failure mode."></textarea>
     <button class="btn" id="f-add" style="width:100%;margin-top:12px">Log design</button></div>`,
   mock:`<div class="card"><label>Round</label><input type="text" id="f1" placeholder="Coding mock with peer">
-    <div class="row"><div><label>Kind</label><select id="f2"><option>Coding</option><option>System design</option><option>Low-level design</option><option>Behavioral</option><option>Full loop</option></select></div>
+    <div class="row"><div><label>Kind</label><select id="f2"><option>Coding</option><option>System design</option><option>Low-level design</option><option>Behavioral</option><option>OA simulation</option><option>Full loop</option></select></div>
     <div><label>Score out of 5</label><input type="number" id="f3" min="1" max="5" placeholder="3"></div></div>
     <label style="margin-top:10px">Feedback to act on</label><textarea id="f4" placeholder="Went silent for four minutes while thinking."></textarea>
     <button class="btn" id="f-add" style="width:100%;margin-top:12px">Log mock</button></div>`,
   ship:`<div class="card"><label>What you shipped</label><input type="text" id="f1" placeholder="MCP server with tracing">
-    <div class="row"><div><label>Project</label><select id="f2"><option>RAG and MCP</option><option>Agent workflow</option><option>Infra and CI/CD</option><option>Write-up</option></select></div>
+    <div class="row"><div><label>Area</label><select id="f2"><option>RAG and MCP</option><option>Agent workflow</option><option>Infra and CI/CD</option><option>Write-up</option></select></div>
     <div><label>Deployed?</label><select id="f3"><option>Deployed</option><option>Local only</option></select></div></div>
     <label style="margin-top:10px">Link</label><input type="text" id="f4" placeholder="github.com/bipro-b/...">
     <button class="btn" id="f-add" style="width:100%;margin-top:12px">Log milestone</button></div>`
 };
 function renderLog(){
   $$("#l-tabs .chip").forEach(c=>c.classList.toggle("on",c.dataset.lt===LT));
-  $("#l-form").innerHTML=FORMS[LT];
-  $("#f-add").onclick=addEntry;
-  const arr=[...S[LT]].reverse();
-  const cr=coldRate();
-  $("#l-sum").textContent = LT==="dsa"&&cr!==null ? cr+"% cold, last 40" : arr.length+" entries";
-  $("#l-list").innerHTML = arr.length? arr.map((e,i)=>{
-    const idx=S[LT].length-1-i;
-    let meta="";
+  $("#l-form").innerHTML=FORMS[LT]; $("#f-add").onclick=addEntry;
+  const arr=[...S[LT]].reverse(), cr=coldRate();
+  $("#l-sum").textContent=LT==="dsa"&&cr!==null?S.dsa.length+" logged · "+cr+"% cold":arr.length+" entries";
+  $("#l-list").innerHTML=arr.length?arr.map((e,i)=>{
+    const idx=S[LT].length-1-i; let meta="";
     if(LT==="dsa") meta=[e.pattern,e.min?e.min+" min":""].filter(Boolean).join(" · ");
     if(LT==="design") meta=[e.kind,e.min?e.min+" min":"",e.note].filter(Boolean).join(" · ");
     if(LT==="mock") meta=[e.kind,e.score?e.score+"/5":"",e.note].filter(Boolean).join(" · ");
     if(LT==="ship") meta=[e.kind,e.state,e.link].filter(Boolean).join(" · ");
-    return '<div class="entry"><div style="min-width:0"><h4>'+esc(e.title)+(LT==="dsa"&&e.cold?' <span class="tag cold">cold</span>':"")+'</h4>'+
-      '<p>'+esc(e.date)+(meta?" · "+esc(meta):"")+'</p></div><button class="del" data-i="'+idx+'">×</button></div>';
-  }).join("") : '<p class="empty">Nothing logged yet. The first entry sets the baseline you measure everything against.</p>';
-  $$("#l-list .del").forEach(b=>b.onclick=()=>{S[LT].splice(+b.dataset.i,1);save();renderLog();renderToday();renderStats()});
+    const when=(e.day?"Day "+e.day+" · ":"")+e.date;
+    return '<div class="entry"><div style="min-width:0"><h4>'+esc(e.title)+(LT==="dsa"&&e.cold?' <span class="tag cold">cold</span>':"")+(e.tid?' <span class="tag">plan</span>':"")+'</h4><p>'+esc(when)+(meta?" · "+esc(meta):"")+'</p></div><button class="del" data-i="'+idx+'" aria-label="Delete">×</button></div>';
+  }).join(""):'<p class="empty">Nothing logged yet. Plan tasks log here automatically when you tick them.</p>';
+  $$("#l-list .del").forEach(b=>b.onclick=()=>{
+    const e=S[LT][+b.dataset.i];
+    if(e&&e.tid){const d=+e.tid.slice(1).split("-")[0];const dn=S.done[d]||[];const j=dn.indexOf(e.tid);if(j>=0)dn.splice(j,1)}
+    S[LT].splice(+b.dataset.i,1);save();renderLog();
+  });
 }
 function addEntry(){
   const v=id=>{const el=$("#"+id);return el?(el.type==="checkbox"?el.checked:el.value.trim()):""};
   if(!v("f1")) return toast("Give it a name first.");
-  const base={title:v("f1"),date:iso(new Date())};
+  const base={title:v("f1"),date:iso(new Date()),day:dayNo()>=1&&dayNo()<=TOTAL?dayNo():null};
   if(LT==="dsa") S.dsa.push({...base,pattern:v("f2"),min:v("f3"),cold:v("f4")});
   if(LT==="design") S.design.push({...base,kind:v("f2"),min:v("f3"),note:v("f4")});
   if(LT==="mock") S.mock.push({...base,kind:v("f2"),score:v("f3"),note:v("f4")});
   if(LT==="ship") S.ship.push({...base,kind:v("f2"),state:v("f3"),link:v("f4")});
-  save(); renderLog(); renderToday(); renderStats(); toast("Logged.");
+  save(); renderLog(); toast("Logged.");
 }
 
-/* ---------------- render: stories ---------------- */
+/* ================= STORIES ================= */
 function renderStories(){
-  const filled=LPS.filter(l=>(S.stories[l]?.s||"").trim()).length;
-  $("#s-count").textContent=filled+" of 16 written";
+  $("#s-count").textContent=storiesN()+" of 16 complete";
   $("#s-list").innerHTML=LPS.map((l,i)=>{
-    const st=S.stories[l]||{};
-    const on=(st.s||"").trim()?" filled":"";
+    const st=S.stories[l]||{}, on=(st.s||"").trim()&&(st.r||"").trim()?" filled":"";
     return '<div class="acc" data-k="'+i+'"><div class="acc-h'+on+'"><span class="dot"></span><h4>'+esc(l)+'</h4><span style="color:var(--muted);font-size:13px">'+(on?"written":"empty")+'</span></div>'+
       '<div class="acc-b"><label>Headline</label><input type="text" data-f="t" value="'+esc(st.t||"")+'" placeholder="Cut deploy time from 40 to 6 minutes">'+
       '<label style="margin-top:10px">Situation and task</label><textarea data-f="s">'+esc(st.s||"")+'</textarea>'+
-      '<label style="margin-top:10px">Action</label><textarea data-f="a">'+esc(st.a||"")+'</textarea>'+
-      '<label style="margin-top:10px">Result, with the number</label><textarea data-f="r">'+esc(st.r||"")+'</textarea></div></div>';
+      '<label style="margin-top:10px">Action — what you did, in first person</label><textarea data-f="a">'+esc(st.a||"")+'</textarea>'+
+      '<label style="margin-top:10px">Result, with the number</label><textarea data-f="r">'+esc(st.r||"")+'</textarea>'+
+      '<label style="margin-top:10px">Follow-ups you expect</label><textarea data-f="f" placeholder="What would you do differently? Who disagreed?">'+esc(st.f||"")+'</textarea></div></div>';
   }).join("");
   $$("#s-list .acc").forEach(acc=>{
     acc.querySelector(".acc-h").onclick=()=>acc.classList.toggle("open");
     acc.querySelectorAll("[data-f]").forEach(inp=>inp.onchange=()=>{
-      const l=LPS[+acc.dataset.k];
-      S.stories[l]=Object.assign({},S.stories[l],{[inp.dataset.f]:inp.value});
-      save(); toast("Saved."); renderStories();
+      const l=LPS[+acc.dataset.k]; S.stories[l]=Object.assign({},S.stories[l],{[inp.dataset.f]:inp.value});
+      save(); toast("Saved.");
+      const h=acc.querySelector(".acc-h"), st=S.stories[l], ok=(st.s||"").trim()&&(st.r||"").trim();
+      h.classList.toggle("filled",!!ok); h.lastElementChild.textContent=ok?"written":"empty";
+      $("#s-count").textContent=storiesN()+" of 16 complete";
     });
   });
 }
 
-/* ---------------- render: apply ---------------- */
-let AT="0";
+/* ================= AMAZON ================= */
+const ASTAT=["Planned","Referral asked","Applied","OA","Phone screen","Loop","Offer","Rejected"];
 function renderApply(){
-  const tiers=["0","3","1","2","4"];
-  $("#a-tabs").innerHTML=tiers.map(t=>'<button class="chip'+(t===AT?" on":"")+'" data-at="'+t+'">'+TIERS[t]+'</button>').join("");
-  $$("#a-tabs .chip").forEach(c=>c.onclick=()=>{AT=c.dataset.at;renderApply()});
-  const live=Object.values(S.companies).filter(v=>v&&v!=="Not applied"&&v!=="Rejected").length;
-  $("#a-count").textContent=live+" active";
-  const list=COS.filter(c=>String(c[2])===AT);
-  $("#a-list").innerHTML=list.map(c=>{
-    const cur=S.companies[c[0]]||"Not applied";
-    return '<div class="co"><div class="co-m"><h4>'+esc(c[0])+'</h4><p>'+esc(c[1])+'</p></div>'+
-      '<select data-c="'+esc(c[0])+'">'+STATUS.map(s=>'<option'+(s===cur?" selected":"")+'>'+s+'</option>').join("")+'</select></div>';
-  }).join("");
-  $$("#a-list select").forEach(s=>s.onchange=()=>{S.companies[s.dataset.c]=s.value;save();renderApply();toast(s.dataset.c+": "+s.value)});
-}
-
-/* ---------------- render: stats ---------------- */
-function renderStats(){
-  const w=Math.max(1,weekNo()), cr=coldRate();
-  $("#p-days").textContent="Week "+Math.min(w,TOTAL)+" of "+TOTAL;
-  const hld=S.design.filter(d=>d.kind==="System design").length;
-  const lld=S.design.length-hld;
-  const mocks=S.mock.filter(m=>+m.score>=4).length;
-  const filled=LPS.filter(l=>(S.stories[l]?.s||"").trim()).length;
-  const cards=[
-    ["Cold-solve rate",cr===null?"—":cr+"%","Target 70% by week 20",cr===null?0:cr/70],
-    ["Problems",S.dsa.length,"of "+TARGETS.dsa,S.dsa.length/TARGETS.dsa],
-    ["System designs",hld,"of 28",hld/28],
-    ["Low-level designs",lld,"of 28",lld/28],
-    ["Mocks scoring 4+",mocks,"of "+S.mock.length+" mocks",S.mock.length?mocks/S.mock.length:0],
-    ["Stories written",filled,"of 16",filled/16]
+  const cr=coldRate(), comp=completeCount();
+  const checks=[
+    ["Cold-solve rate 70%+ on last 40",cr!==null&&cr>=70,cr===null?"—":cr+"%"],
+    ["200+ problems logged",S.dsa.length>=200,S.dsa.length],
+    ["15+ system designs",hldN()>=15,hldN()],
+    ["15+ low-level designs",lldN()>=15,lldN()],
+    ["All 16 LP stories with results",storiesN()>=16,storiesN()+"/16"],
+    ["4+ mocks scoring 4/5 or better",mocks4()>=4,mocks4()],
+    ["120+ plan days complete",comp>=120,comp]
   ];
-  $("#p-cards").innerHTML=cards.map(c=>
-    '<div class="stat"><div class="n">'+c[1]+'</div><div class="l">'+c[0]+'</div><div class="l" style="margin-top:1px">'+c[2]+'</div>'+
-    '<div class="bar"><i style="width:'+Math.min(100,Math.round(c[3]*100))+'%"></i></div></div>').join("");
-  $("#p-start").value=S.start; $("#p-target").value=S.target||"";
+  const ok=checks.filter(c=>c[1]).length;
+  $("#a-ready").textContent=ok+" of "+checks.length+" green";
+  $("#a-checks").innerHTML=checks.map(c=>'<div class="chk"><span class="ic'+(c[1]?" y":"")+'">'+(c[1]?"✓":"·")+'</span>'+c[0]+'<span class="v">'+c[2]+'</span></div>').join("");
+  const live=S.apps.filter(a=>!["Planned","Rejected","Offer"].includes(a.status)).length;
+  $("#a-count").textContent=S.apps.length+" tracked · "+live+" active";
+  $("#a-list").innerHTML=S.apps.length?S.apps.map((a,i)=>'<div class="co"><div class="co-m"><h4>'+esc(a.role)+'</h4><p>'+esc([a.loc,a.req,a.date].filter(Boolean).join(" · "))+'</p></div>'+
+    '<select data-i="'+i+'">'+ASTAT.map(s=>'<option'+(s===a.status?" selected":"")+'>'+s+'</option>').join("")+'</select><button class="del" data-x="'+i+'" aria-label="Delete">×</button></div>').join("")
+    :'<p class="empty" style="padding:4px 0">No applications yet. Day 130 asks for referrals; day 150 is apply day.</p>';
+  $$("#a-list select").forEach(s=>s.onchange=()=>{S.apps[+s.dataset.i].status=s.value;save();renderApply();toast("Updated: "+s.value)});
+  $$("#a-list [data-x]").forEach(b=>b.onclick=()=>{S.apps.splice(+b.dataset.x,1);save();renderApply()});
 }
+$("#a-add").onclick=()=>{
+  const role=$("#a-role").value.trim(); if(!role) return toast("Add the role title first.");
+  S.apps.push({role,loc:$("#a-loc").value.trim(),req:$("#a-req").value.trim(),status:"Planned",date:iso(new Date())});
+  $("#a-role").value=$("#a-loc").value=$("#a-req").value=""; save(); renderApply();
+};
 
-/* ---------------- wiring ---------------- */
-$$("nav button").forEach(b=>b.onclick=()=>{
-  $$("nav button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
-  $$(".view").forEach(v=>v.classList.remove("on"));
-  $("#v-"+b.dataset.v).classList.add("on");
-  window.scrollTo(0,0);
-  ({today:renderToday,log:renderLog,stories:renderStories,apply:renderApply,stats:renderStats})[b.dataset.v]();
-});
+/* ================= wiring ================= */
+const R={today:renderToday,plan:renderPlan,log:renderLog,stories:renderStories,apply:renderApply};
+function go(v){
+  $$("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
+  $$(".view").forEach(x=>x.classList.remove("on")); $("#v-"+v).classList.add("on");
+  window.scrollTo(0,0); R[v]();
+}
+$$("nav button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="today"&&$("#v-today").classList.contains("on"))VD=null;go(b.dataset.v)});
+$("#d-prev").onclick=()=>{VD=clamp(VD-1);renderToday()};
+$("#d-next").onclick=()=>{VD=clamp(VD+1);renderToday()};
+$("#d-now").onclick=()=>{VD=clamp(dayNo());renderToday()};
 $$("#l-tabs .chip").forEach(c=>c.onclick=()=>{LT=c.dataset.lt;renderLog()});
 $("#q-add").onclick=()=>{
-  const t=$("#q-title").value.trim();
-  if(!t) return toast("Name the problem first.");
-  S.dsa.push({title:t,pattern:$("#q-pattern").value.trim(),min:$("#q-min").value,cold:$("#q-cold").checked,date:iso(new Date())});
+  const t=$("#q-title").value.trim(); if(!t) return toast("Name the problem first.");
+  S.dsa.push({title:t,pattern:$("#q-pattern").value.trim(),min:$("#q-min").value,cold:$("#q-cold").checked,date:iso(new Date()),day:VD});
   save(); $("#q-title").value=$("#q-pattern").value=$("#q-min").value=""; $("#q-cold").checked=false;
-  toast("Logged. "+S.dsa.length+" total."); renderToday();
+  toast("Logged. "+S.dsa.length+" total.");
 };
-$("#p-start").onchange=e=>{S.start=e.target.value||iso(new Date());save();renderToday();renderStats()};
-$("#p-target").onchange=e=>{S.target=e.target.value;save();renderToday()};
+$("#p-start").onchange=e=>{S.start=e.target.value||iso(new Date());VD=null;save();renderPlan()};
 $("#p-theme").onclick=()=>{
   const cur=document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
   S.theme=cur==="dark"?"light":"dark"; document.documentElement.dataset.theme=S.theme; save();
 };
 $("#p-export").onclick=()=>{
-  const b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(b);
-  a.download="prep-log-"+iso(new Date())+".json"; a.click(); URL.revokeObjectURL(a.href);
+  const b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(b); a.download="amazon-180-"+iso(new Date())+".json"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+$("#p-copy").onclick=()=>{
+  const t=JSON.stringify(S);
+  try{navigator.clipboard.writeText(t).then(()=>toast("Backup copied. Paste it into a .json file."),()=>toast("Copy was blocked here — use Download."))}catch(e){toast("Copy was blocked here — use Download.")}
 };
 $("#p-import").onclick=()=>$("#p-file").click();
 $("#p-file").onchange=e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=()=>{try{S=Object.assign(blank(),JSON.parse(r.result));save();boot();toast("Backup restored.")}
-  catch(x){toast("That file isn't a valid backup.")}};
-  r.readAsText(f);
+  const f=e.target.files[0]; if(!f) return; const r=new FileReader();
+  r.onload=()=>{try{S=Object.assign(blank(),JSON.parse(r.result));save();VD=null;boot();renderPlan();toast("Backup restored.")}catch(x){toast("That file isn't a valid backup.")}};
+  r.readAsText(f); e.target.value="";
 };
-$("#p-reset").onclick=()=>{
-  if(!confirm("Erase every logged problem, story and application? This cannot be undone.")) return;
-  S=blank(); save(); boot(); toast("Data erased.");
+$("#p-reset").onclick=e=>{
+  const b=e.currentTarget;
+  if(!b._arm){b._arm=true;b.textContent="Tap again to erase everything";setTimeout(()=>{b._arm=false;b.textContent="Erase all data"},4000);return}
+  b._arm=false;b.textContent="Erase all data";
+  S=blank(); save(); VD=null; boot(); renderPlan(); toast("Data erased.");
 };
-
-function boot(){
-  if(S.theme) document.documentElement.dataset.theme=S.theme;
-  renderToday(); renderStats();
-}
+function boot(){ if(S.theme) document.documentElement.dataset.theme=S.theme; renderToday(); }
 load(); boot();
 </script>
 </body>
