@@ -70,7 +70,11 @@ a{color:inherit}
 .nb:disabled{opacity:.35;cursor:default}
 .pbar{height:7px;background:var(--line);border-radius:99px;margin-top:14px;overflow:hidden}
 .pbar i{display:block;height:100%;background:var(--done);border-radius:99px;transition:width .25s}
-.done-banner{margin-top:12px;background:var(--done);color:var(--surface);border-radius:11px;padding:11px 14px;font-weight:600;font-size:14px}
+.done-banner{margin-top:12px;background:var(--done);color:var(--surface);border-radius:11px;padding:11px 14px;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.done-banner button{background:var(--surface);color:var(--done);border:none;border-radius:8px;padding:7px 12px;font-weight:600;cursor:pointer}
+.lock-note{margin-top:12px;background:var(--warn-soft);color:var(--warn);border-radius:11px;padding:10px 14px;font-size:13.5px;font-weight:500}
+.task.locked{opacity:.55;cursor:default}
+.gc.lock{opacity:.45}
 
 /* sections */
 .sec{margin-top:24px}
@@ -133,7 +137,6 @@ label{font-size:12.5px;color:var(--muted);display:block}
 .gc{aspect-ratio:1;border-radius:4px;background:var(--line);border:none;padding:0;cursor:pointer;font-size:9px;color:transparent;position:relative}
 .gc.s1{background:color-mix(in srgb,var(--done) 40%,var(--line))}
 .gc.s2{background:var(--done)}
-.gc.miss{background:var(--warn-soft)}
 .gc.rev{box-shadow:inset 0 0 0 1.5px var(--brass)}
 .gc.now{box-shadow:inset 0 0 0 2.5px var(--ink)}
 .gc.ph{margin-left:0}
@@ -193,7 +196,7 @@ nav button.on svg{stroke-width:2.2}
       </div>
       <div class="daynav">
         <button class="nb" id="d-prev" aria-label="Previous day">‹</button>
-        <button class="nb txt" id="d-now">Today</button>
+        <button class="nb txt" id="d-now">Current</button>
         <button class="nb" id="d-next" aria-label="Next day">›</button>
       </div>
     </div>
@@ -206,7 +209,7 @@ nav button.on svg{stroke-width:2.2}
   <div class="sec">
     <div class="sec-head"><h2>Tasks</h2><span id="t-count"></span></div>
     <div id="t-list"></div>
-    <p class="note">The day counts as complete only when every task is checked. Problem and design tasks log themselves; mark a problem <b>Cold</b> if you solved it with no hint inside 25 minutes.</p>
+    <p class="note">The day counts as complete only when every task is checked, and the next day unlocks then. Problem and design tasks log themselves; mark a problem <b>Cold</b> if you solved it with no hint inside 25 minutes.</p>
   </div>
 
   <div class="sec">
@@ -236,9 +239,8 @@ nav button.on svg{stroke-width:2.2}
       <div class="key">
         <span><i style="background:var(--done)"></i>Complete</span>
         <span><i style="background:color-mix(in srgb,var(--done) 40%,var(--line))"></i>Partial</span>
-        <span><i style="background:var(--warn-soft)"></i>Missed</span>
         <span><i style="background:transparent;box-shadow:inset 0 0 0 1.5px var(--brass)"></i>Review day</span>
-        <span><i style="background:transparent;box-shadow:inset 0 0 0 2px var(--ink)"></i>Today</span>
+        <span><i style="background:transparent;box-shadow:inset 0 0 0 2px var(--ink)"></i>Current day</span><span><i style="opacity:.45"></i>Locked</span>
       </div>
     </div>
   </div>
@@ -251,9 +253,7 @@ nav button.on svg{stroke-width:2.2}
   <div class="sec">
     <div class="sec-head"><h2>Setup</h2></div>
     <div class="card">
-      <label for="p-start">Day 1 date</label>
-      <input type="date" id="p-start">
-      <p class="note">Changing this shifts the calendar. Ticked tasks stay attached to their day number, not the date.</p>
+      <p class="note" style="margin-top:0">Days advance when you finish them, not by the calendar. Your current day is always the first day with an unticked task. You can open later days to preview them, but you can tick them only after the days before are complete.</p>
     </div>
     <div class="card">
       <div class="row">
@@ -324,7 +324,7 @@ nav button.on svg{stroke-width:2.2}
 /* ================= storage ================= */
 const KEY="amazon-180-v1";
 function iso(d){return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
-const blank=()=>({start:iso(new Date()),done:{},dsa:[],design:[],mock:[],ship:[],stories:{},apps:[],theme:""});
+const blank=()=>({start:iso(new Date()),done:{},doneAt:{},dsa:[],design:[],mock:[],ship:[],stories:{},apps:[],theme:""});
 let S=blank();
 function load(){try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(blank(),JSON.parse(r));}catch(e){toast("Could not read saved data. Starting fresh.")}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast("Save failed — storage may be full or blocked.")}}
@@ -444,13 +444,20 @@ const PLAN={};
 })();
 
 /* ================= derived ================= */
-function dOf(n){const s=new Date(S.start+"T00:00:00");s.setDate(s.getDate()+n-1);return s}
-function dayNo(dt=new Date()){const s=new Date(S.start+"T00:00:00"),t=new Date(iso(dt)+"T00:00:00");return Math.round((t-s)/864e5)+1}
 const clamp=n=>Math.min(TOTAL,Math.max(1,n));
 const fmt=d=>d.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short",year:"numeric"});
 function state(d){const ts=PLAN[d],dn=S.done[d]||[],c=ts.filter(t=>dn.includes(t.id)).length;return c===0?0:c===ts.length?2:1}
 const completeCount=()=>{let n=0;for(let d=1;d<=TOTAL;d++)if(state(d)===2)n++;return n};
-function streak(){let d=clamp(dayNo());if(dayNo()<1)return 0;if(state(d)!==2)d--;let n=0;while(d>=1&&state(d)===2){n++;d--}return n}
+function curDay(){for(let d=1;d<=TOTAL;d++)if(state(d)!==2)return d;return TOTAL+1}
+const canTick=d=>d<=curDay()||(S.done[d]||[]).length>0;
+const fmtIso=k=>k?new Date(k+"T00:00:00").toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"}):"";
+// streak = consecutive calendar dates (ending today, or yesterday) on which you finished at least one plan day
+function streak(){
+  const dates=new Set(Object.entries(S.doneAt).filter(([d])=>state(+d)===2).map(([,v])=>v));
+  const t=new Date(); if(!dates.has(iso(t))) t.setDate(t.getDate()-1);
+  let n=0; while(dates.has(iso(t))){n++;t.setDate(t.getDate()-1)} return n;
+}
+function projectedFinish(){const left=TOTAL-completeCount(); if(left<=0) return null; const t=new Date(); t.setDate(t.getDate()+left-1); return t}
 function coldRate(){const l=S.dsa.slice(-40);return l.length?Math.round(l.filter(x=>x.cold).length/l.length*100):null}
 const hldN=()=>S.design.filter(d=>d.kind==="System design").length;
 const lldN=()=>S.design.length-hldN();
@@ -460,22 +467,25 @@ const mocks4=()=>S.mock.filter(m=>+m.score>=4).length;
 /* ================= DAY view ================= */
 let VD=null;
 function renderToday(){
-  const tn=dayNo(); if(VD===null) VD=clamp(tn);
+  const tn=curDay(); if(VD===null) VD=clamp(tn);
   const d=VD, ts=PLAN[d], dn=S.done[d]||[], ph=phaseOf(d), w=Math.ceil(d/7), rev=(d-1)%7===6, st=state(d);
   $("#h-day").firstChild.nodeValue="Day "+d; $("#h-of").textContent=" of "+TOTAL;
-  const rel=d===tn?"today":d<tn?(tn-d)+(tn-d>1?" days ago":" day ago"):"in "+(d-tn)+(d-tn>1?" days":" day");
-  $("#h-date").textContent=fmt(dOf(d))+" · Week "+w+" · "+rel;
+  const locked=!canTick(d);
+  const rel=st===2?"completed"+(S.doneAt[d]?" "+fmtIso(S.doneAt[d]):""):d===tn?"your current day":locked?"locked":"in progress";
+  $("#h-date").textContent="Week "+w+" · "+rel;
   $("#h-phase").innerHTML="<b>Phase "+(PHASES.indexOf(ph)+1)+" · "+ph.name+"</b> — "+ph.detail;
   const b=[];
   if(st===2) b.push('<span class="badge ok">Day complete</span>');
   if(rev) b.push('<span class="badge rev">Review day</span>');
   const sk=streak(); if(sk>1) b.push('<span class="badge streak">'+sk+'-day streak</span>');
   b.push('<span class="badge">'+completeCount()+' of 180 complete</span>');
-  if(tn<1) b.push('<span class="badge">Starts in '+(1-tn)+' days</span>');
   $("#h-badges").innerHTML=b.join("");
   const c=ts.filter(t=>dn.includes(t.id)).length;
   $("#h-bar").style.width=Math.round(c/ts.length*100)+"%";
-  $("#h-banner").innerHTML=st===2?'<div class="done-banner">Day '+d+' done. '+(d<TOTAL?'Tomorrow: '+esc(PLAN[d+1][0].name):'All 180 days finished. Go get the offer.')+'</div>':"";
+  $("#h-banner").innerHTML=st===2
+    ?'<div class="done-banner"><span>Day '+d+' done.'+(d>=TOTAL?' All 180 days finished. Go get the offer.':'')+'</span>'+(d<TOTAL?'<button id="go-next">Start Day '+(d+1)+' →</button>':'')+'</div>'
+    :locked?'<div class="lock-note">Preview only. Finish Day '+tn+' to unlock this day.</div>':"";
+  const gn=$("#go-next"); if(gn) gn.onclick=()=>{VD=clamp(d+1);renderToday();window.scrollTo({top:0,behavior:"smooth"})};
   $("#t-count").textContent=c+" of "+ts.length+" done";
   $("#d-prev").disabled=d<=1; $("#d-next").disabled=d>=TOTAL;
 
@@ -497,7 +507,7 @@ function renderToday(){
       if(on) act+='<button class="mini'+(e&&e.cold?" on":"")+'" data-cold="'+t.id+'" data-stop>'+(e&&e.cold?"Cold ✓":"Cold?")+'</button>';
     }
     const kind=t.type==="dsa"?(t.kind||"Problem"):KIND[t.type];
-    html+='<div class="task'+(on?" done":"")+(t.type==="special"?" special":"")+'" data-t="'+t.id+'"><div class="box"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>'+
+    html+='<div class="task'+(on?" done":"")+(locked?" locked":"")+(t.type==="special"?" special":"")+'" data-t="'+t.id+'"><div class="box"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>'+
       '<div class="t-main">'+(kind?'<div class="t-kind">'+esc(kind)+'</div>':'')+'<div class="t-name">'+esc(t.name)+'</div>'+(note?'<div class="t-note">'+esc(note)+'</div>':'')+'</div>'+
       (act?'<div class="t-act">'+act+'</div>':'')+'</div>';
   });
@@ -509,10 +519,14 @@ function renderToday(){
   $$("#t-list .task").forEach(el=>el.onclick=()=>toggle(d,ts.find(t=>t.id===el.dataset.t)));
 }
 function toggle(d,t){
+  if(!canTick(d)) return toast("Finish Day "+curDay()+" first.");
   const dn=S.done[d]||(S.done[d]=[]), i=dn.indexOf(t.id), was=state(d);
   if(i<0){dn.push(t.id);autoLog(d,t,true)}else{dn.splice(i,1);autoLog(d,t,false)}
+  const now=state(d);
+  if(now===2&&was!==2) S.doneAt[d]=iso(new Date());
+  if(now!==2) delete S.doneAt[d];
   save(); renderToday();
-  if(was!==2&&state(d)===2){toast("Day "+d+" complete — "+completeCount()+" of 180");window.scrollTo({top:0,behavior:"smooth"})}
+  if(was!==2&&now===2){toast("Day "+d+" complete — "+completeCount()+" of 180");window.scrollTo({top:0,behavior:"smooth"})}
 }
 function autoLog(d,t,on){
   const k=t.type==="dsa"?"dsa":(t.type==="sd"||t.type==="lld")?"design":null; if(!k) return;
@@ -524,8 +538,8 @@ function autoLog(d,t,on){
 
 /* ================= PLAN view ================= */
 function renderPlan(){
-  const tn=dayNo(), comp=completeCount(), cr=coldRate();
-  $("#p-sum").textContent=tn<1?"Starts in "+(1-tn)+" days":tn>TOTAL?"Plan finished":"Day "+tn+" today";
+  const tn=curDay(), comp=completeCount(), cr=coldRate(), pf=projectedFinish();
+  $("#p-sum").textContent=tn>TOTAL?"Plan finished":"On Day "+tn+(pf?" · at one day per day, done "+pf.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}):"");
   const cards=[
     ["Days complete",comp,"of 180",comp/180],
     ["Current streak",streak(),"days in a row",Math.min(1,streak()/30)],
@@ -540,17 +554,16 @@ function renderPlan(){
   let g="";
   for(let d=1;d<=TOTAL;d++){
     const s=state(d), cls=["gc"];
-    if(s===2)cls.push("s2");else if(s===1)cls.push("s1");else if(d<tn)cls.push("miss");
+    if(s===2)cls.push("s2");else if(s===1)cls.push("s1");else if(!canTick(d))cls.push("lock");
     if((d-1)%7===6)cls.push("rev"); if(d===tn)cls.push("now");
-    g+='<button class="'+cls.join(" ")+'" data-d="'+d+'" title="Day '+d+' · '+fmt(dOf(d))+'">'+d+'</button>';
+    g+='<button class="'+cls.join(" ")+'" data-d="'+d+'" title="Day '+d+(S.doneAt[d]?' · done '+fmtIso(S.doneAt[d]):'')+'">'+d+'</button>';
   }
   $("#p-grid").innerHTML=g;
   $$("#p-grid .gc").forEach(b=>b.onclick=()=>{VD=+b.dataset.d;go("today")});
   $("#p-phases").innerHTML=PHASES.map((p,i)=>{
     let c=0;for(let d=p.from;d<=p.to;d++)if(state(d)===2)c++;
-    return '<div class="phrow"><div class="num">'+(i+1)+'</div><div><h4>'+p.name+' · days '+p.from+'–'+p.to+'</h4><p>'+fmt(dOf(p.from))+' → '+fmt(dOf(p.to))+' · '+c+' of '+(p.to-p.from+1)+' complete</p><p>'+p.detail+'</p></div></div>';
+    return '<div class="phrow"><div class="num">'+(i+1)+'</div><div><h4>'+p.name+' · days '+p.from+'–'+p.to+'</h4><p>'+c+' of '+(p.to-p.from+1)+' complete</p><p>'+p.detail+'</p></div></div>';
   }).join("");
-  $("#p-start").value=S.start;
 }
 
 /* ================= LOG view ================= */
@@ -600,7 +613,7 @@ function renderLog(){
 function addEntry(){
   const v=id=>{const el=$("#"+id);return el?(el.type==="checkbox"?el.checked:el.value.trim()):""};
   if(!v("f1")) return toast("Give it a name first.");
-  const base={title:v("f1"),date:iso(new Date()),day:dayNo()>=1&&dayNo()<=TOTAL?dayNo():null};
+  const base={title:v("f1"),date:iso(new Date()),day:Math.min(curDay(),TOTAL)};
   if(LT==="dsa") S.dsa.push({...base,pattern:v("f2"),min:v("f3"),cold:v("f4")});
   if(LT==="design") S.design.push({...base,kind:v("f2"),min:v("f3"),note:v("f4")});
   if(LT==="mock") S.mock.push({...base,kind:v("f2"),score:v("f3"),note:v("f4")});
@@ -672,7 +685,7 @@ function go(v){
 $$("nav button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="today"&&$("#v-today").classList.contains("on"))VD=null;go(b.dataset.v)});
 $("#d-prev").onclick=()=>{VD=clamp(VD-1);renderToday()};
 $("#d-next").onclick=()=>{VD=clamp(VD+1);renderToday()};
-$("#d-now").onclick=()=>{VD=clamp(dayNo());renderToday()};
+$("#d-now").onclick=()=>{VD=clamp(curDay());renderToday()};
 $$("#l-tabs .chip").forEach(c=>c.onclick=()=>{LT=c.dataset.lt;renderLog()});
 $("#q-add").onclick=()=>{
   const t=$("#q-title").value.trim(); if(!t) return toast("Name the problem first.");
@@ -680,7 +693,6 @@ $("#q-add").onclick=()=>{
   save(); $("#q-title").value=$("#q-pattern").value=$("#q-min").value=""; $("#q-cold").checked=false;
   toast("Logged. "+S.dsa.length+" total.");
 };
-$("#p-start").onchange=e=>{S.start=e.target.value||iso(new Date());VD=null;save();renderPlan()};
 $("#p-theme").onclick=()=>{
   const cur=document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
   S.theme=cur==="dark"?"light":"dark"; document.documentElement.dataset.theme=S.theme; save();
@@ -705,7 +717,8 @@ $("#p-reset").onclick=e=>{
   b._arm=false;b.textContent="Erase all data";
   S=blank(); save(); VD=null; boot(); renderPlan(); toast("Data erased.");
 };
-function boot(){ if(S.theme) document.documentElement.dataset.theme=S.theme; renderToday(); }
+function boot(){ for(let d=1;d<=TOTAL;d++) if(state(d)===2&&!S.doneAt[d]) S.doneAt[d]=iso(new Date());
+  if(S.theme) document.documentElement.dataset.theme=S.theme; renderToday(); }
 load(); boot();
 </script>
 </body>
